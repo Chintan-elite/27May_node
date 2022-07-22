@@ -25,6 +25,7 @@ router.post("/addUser", async (req, resp) => {
     } else {
         try {
 
+
             const result = await User.findByIdAndUpdate(_id, req.body)
             const result1 = await User.find();
             // resp.redirect("display")
