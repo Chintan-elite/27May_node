@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 const geocodeData = (city, callback) => {
-    const url = `https://api.opencagedata.com/geocode/v1/json?q=${city}&key=faed4d9eb29d483a866000c901ccb680`
+    const url = ` `
     axios.get(url).then(result => {
         const data = result.data.results[0].geometry;
 

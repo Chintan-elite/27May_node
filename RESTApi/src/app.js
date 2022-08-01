@@ -11,8 +11,10 @@ mongoose.connect("mongodb://127.0.0.1:27017/rest").then(() => {
 
 const userrouter = require("../router/userrouter");
 const categoryrouter = require("../router/categoryRouter")
+const cartrouter = require("../router/cartrouter")
 app.use("/", userrouter)
 app.use("/", categoryrouter)
+app.use("/", cartrouter)
 
 app.listen(3000, (req, resp) => {
     console.log("Server running on port 3000");

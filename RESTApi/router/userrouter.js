@@ -3,7 +3,7 @@ const router = express.Router()
 const User = require("../model/User")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken")
-const auth = require("../middleware/auth")
+const auth = require("../middleware/auth");
 
 router.get("/users", auth, async (req, resp) => {
     try {
@@ -84,7 +84,8 @@ router.post("/login", async (req, resp) => {
 
 router.post("/logout", auth, async (req, resp) => {
     try {
-        resp.removeHeader("auth-token");
+        //resp.header('auth-token', 'abc').send(`logut succesfully!!!`)
+        resp.removeHeader('auth-token')
 
     } catch (error) {
         console.log(error)
