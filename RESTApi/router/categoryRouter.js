@@ -2,6 +2,19 @@ const express = require("express")
 const router = express.Router();
 const Category = require("../model/Category")
 const Product = require("../model/Product")
+const multer = require("multer")
+const path = require("path")
+
+var Storage = multer.diskStorage({
+    destination: "./public/img",
+    filename: (req, file, callback) => {
+        callback(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname));
+    }
+})
+
+var upload = multer({
+    storage: Storage
+}).single("file");
 
 router.post("/categories", async (req, resp) => {
     try {
@@ -43,6 +56,14 @@ router.delete("/categories/:id", async (req, resp) => {
     }
 })
 
+
+
+
+
+
+
+
+
 router.put("/categories/:id", async (req, resp) => {
     try {
 
@@ -58,9 +79,16 @@ router.put("/categories/:id", async (req, resp) => {
 
 
 
-router.post("/products", async (req, resp) => {
+router.post("/products", upload, async (req, resp) => {
     try {
-        const prod = new Product(req.body)
+
+
+        const prod = new Product({
+            pname: req.body.pname,
+            cid: req.body.cid,
+            path: path.join(__dirname, "./public/img"),
+            img: req.file.filename
+        })
         const result = await prod.save();
         resp.send(result)
     } catch (error) {
@@ -118,6 +146,17 @@ router.get("/ProductBycat/:id", async (req, resp) => {
     } catch (error) {
         resp.send(error)
     }
+
+})
+
+
+
+
+
+
+router.post("/imgUpload", upload, (req, resp) => {
+
+    resp.send(`localhost:3000/public/img/${req.file.filename}`)
 
 })
 

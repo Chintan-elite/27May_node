@@ -32,12 +32,22 @@ router.get("/getCartProduct", auth, async (req, resp) => {
     const uid = req.user._id;
 
     try {
-        const result = await Cart.find({ uid: uid });
-        resp.send(result)
+        result = await Cart.find({ uid: uid });
+
+        const data = await Cart.aggregate([{ $lookup: { from: 'products', localField: 'pid', foreignField: '_id', as: 'ProductDetails' } }, { $lookup: { from: 'users', localField: 'uid', foreignField: '_id', as: 'UserDetails' } }])
+
+
+        resp.send(data)
     } catch (error) {
         resp.send(error)
     }
 
 })
+
+
+
+
+
+
 
 module.exports = router

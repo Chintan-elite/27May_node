@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../model/User");
+const bcrypt = require("bcryptjs")
 
 
 router.get("/", (req, resp) => {
-    resp.redirect("display")
+    resp.render("login")
 })
 
 router.post("/addUser", async (req, resp) => {
@@ -15,6 +16,7 @@ router.post("/addUser", async (req, resp) => {
     if (_id === "") {
         try {
             const user = new User(req.body)
+
             const result = await user.save();
             const result1 = await User.find();
             // resp.redirect("display")
@@ -74,6 +76,43 @@ router.get("/editUser", async (req, resp) => {
     } catch (error) {
         console.log(error)
     }
+})
+
+
+router.post("/login", async (req, resp) => {
+
+    const email = req.body.Email;
+    const password = req.body.Password;
+
+
+
+    try {
+        const result = await User.findOne({ Email: email });
+
+
+
+        const isMatch = await bcrypt.compare(password, result.Password);
+
+
+
+
+
+        if (isMatch) {
+
+
+            const token = result.generateToken();
+            console.log(token)
+            resp.redirect("display")
+        }
+        else {
+            resp.render("login", { err: "Invalid username or password" })
+        }
+
+    } catch (error) {
+        resp.render("login", { err: "Invalid username or password" })
+    }
+
+
 })
 
 module.exports = router;
