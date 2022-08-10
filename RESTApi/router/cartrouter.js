@@ -32,7 +32,7 @@ router.get("/getCartProduct", auth, async (req, resp) => {
     const uid = req.user._id;
 
     try {
-        result = await Cart.find({ uid: uid });
+        //result = await Cart.find({ uid: uid });
 
         const data = await Cart.aggregate([{ $lookup: { from: 'products', localField: 'pid', foreignField: '_id', as: 'ProductDetails' } }, { $lookup: { from: 'users', localField: 'uid', foreignField: '_id', as: 'UserDetails' } }])
 

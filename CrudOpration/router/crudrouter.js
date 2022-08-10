@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const User = require("../model/User");
 const bcrypt = require("bcryptjs")
-
-
+const cookie = require("cookie-parser")
+const auth = require("../middleware/auth")
 router.get("/", (req, resp) => {
     resp.render("login")
 })
@@ -41,7 +41,7 @@ router.post("/addUser", async (req, resp) => {
 })
 
 
-router.get("/display", async (req, resp) => {
+router.get("/display", auth, async (req, resp) => {
 
     try {
         const result = await User.find();
@@ -100,8 +100,14 @@ router.post("/login", async (req, resp) => {
         if (isMatch) {
 
 
-            const token = result.generateToken();
-            console.log(token)
+            const token = await result.generateToken();
+
+            resp.cookie("jwt", token, {
+                expires: new Date(Date.now() + 500000),
+                httpOnly: true
+
+            })
+
             resp.redirect("display")
         }
         else {
@@ -109,7 +115,7 @@ router.post("/login", async (req, resp) => {
         }
 
     } catch (error) {
-        resp.render("login", { err: "Invalid username or password" })
+        resp.render("login", { err: "Invalid Credentials" })
     }
 
 

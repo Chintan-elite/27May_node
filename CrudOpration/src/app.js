@@ -5,6 +5,7 @@ const hbs = require("hbs")
 const path = require("path");
 const PORT = 3000;
 const bodyParser = require('body-parser')
+const cookieParser = require("cookie-parser")
 
 
 mongoose.connect("mongodb://127.0.0.1:27017/crud").then(() => {
@@ -15,7 +16,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/crud").then(() => {
 
 
 const viewPath = path.join(__dirname, '../templetes/views');
-
+app.use(cookieParser())
 app.set("view engine", "hbs")
 app.set("views", viewPath);
 app.use(bodyParser.urlencoded({ extended: false }))

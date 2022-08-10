@@ -14,19 +14,21 @@ const userScema = new mongoose.Schema({
     ]
 })
 
-userScema.method.generateToken = async function (next) {
+userScema.methods.generateToken = async function (next) {
 
     const token = await jwt.sign({ _id: this._id }, "thisismylogintokenkey")
-    this.Tokens = this.Tokens.concate({ token: token })
-    this.save();
-    next();
+    this.Tokens = this.Tokens.concat({ token: token })
+    await this.save();
+    return token;
 }
 
 userScema.pre("save", async function (next) {
 
-    this.Password = await bcrypt.hash(this.Password, 10);
-    console.log(this.Password)
-    next()
+    if (this.isModified("Password")) {
+        this.Password = await bcrypt.hash(this.Password, 10);
+
+        next()
+    }
 })
 
 
