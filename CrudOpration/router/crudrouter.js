@@ -121,4 +121,18 @@ router.post("/login", async (req, resp) => {
 
 })
 
+router.get("/logout", auth, (req, resp) => {
+
+    const token = req.token;
+    //console.log(req.user)
+    req.user.Tokens = req.user.Tokens.filter((element) => {
+        return element.token != token
+    })
+
+    req.user.save();
+    resp.clearCookie("jwt");
+    resp.render("login")
+
+})
+
 module.exports = router;
