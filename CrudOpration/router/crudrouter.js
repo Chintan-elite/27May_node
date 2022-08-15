@@ -89,7 +89,10 @@ router.post("/login", async (req, resp) => {
     try {
         const result = await User.findOne({ Email: email });
 
-
+        const len = result.Tokens.length
+        if (len >= 5) {
+            return resp.render("login", { err: "you have reached max. login limit" })
+        }
 
         const isMatch = await bcrypt.compare(password, result.Password);
 
@@ -129,6 +132,15 @@ router.get("/logout", auth, (req, resp) => {
         return element.token != token
     })
 
+    req.user.save();
+    resp.clearCookie("jwt");
+    resp.render("login")
+
+})
+
+router.get("/logoutall", auth, (req, resp) => {
+
+    req.user.Tokens = [];
     req.user.save();
     resp.clearCookie("jwt");
     resp.render("login")

@@ -8,7 +8,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require("cookie-parser")
 
 
-mongoose.connect("mongodb://127.0.0.1:27017/crud").then(() => {
+mongoose.connect("mongodb+srv://Tops:tops123@cluster0.ccgetvk.mongodb.net/crud?retryWrites=true&w=majority").then(() => {
     console.log("Connnection established successfully!!!!")
 }).catch(err => {
     console.log(err);
